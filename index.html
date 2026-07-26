@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Generación Billonario Cuántico — Prototipo</title>
+<style>
+  :root{
+    --navy-deep:#0a1830;
+    --navy:#122a4d;
+    --navy-light:#1f3d6b;
+    --gold:#d4af37;
+    --gold-bright:#f4d976;
+    --gold-dark:#a8811f;
+    --cream:#f6f1e4;
+    --paper:#fbf8f0;
+    --ink:#1c2430;
+    --gray:#7a8390;
+    --danger:#b23a2e;
+    --success:#3a8f5c;
+    --display: Georgia, 'Times New Roman', serif;
+    --body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --mono: 'Courier New', Courier, monospace;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background:var(--navy-deep);
+    font-family:var(--body);
+    color:var(--ink);
+  }
+  #app{
+    max-width:460px;
+    margin:0 auto;
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.14), transparent 55%),
+      linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 480px, var(--cream) 480px);
+    padding-bottom:40px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    padding:26px 22px 18px 22px;
+    text-align:center;
+    color:var(--cream);
+  }
+  .brand{
+    font-size:11px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:14px;
+  }
+  .brand span{opacity:0.55; color:var(--cream); letter-spacing:0.1em;}
+  .stage-tag{
+    display:inline-block;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--navy-deep);
+    background:var(--gold-bright);
+    padding:4px 12px;
+    border-radius:100px;
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .patrimonio-label{
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:rgba(246,241,228,0.6);
+    margin-bottom:2px;
+  }
+  .patrimonio{
+    font-family:var(--mono);
+    font-size:46px;
+    font-weight:700;
+    color:var(--gold-bright);
+    letter-spacing:-0.01em;
+    line-height:1;
+  }
+  .patrimonio small{ font-size:20px; opacity:0.7; }
+  .income-rate{
+    font-size:13px;
+    color:var(--gold);
+    margin-top:6px;
+    min-height:18px;
+    font-family:var(--mono);
+  }
+
+  /* ---------- Progress ---------- */
+  .progress-wrap{
+    padding:0 22px 22px 22px;
+  }
+  .progress-label{
+    display:flex; justify-content:space-between;
+    font-size:11px; color:rgba(246,241,228,0.65);
+    margin-bottom:6px;
+    letter-spacing:0.04em;
+  }
+  .progress-track{
+    height:8px; border-radius:100px;
+    background:rgba(255,255,255,0.12);
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%; border-radius:100px;
+    background:linear-gradient(90deg, var(--gold-dark), var(--gold-bright));
+    width:0%;
+    transition:width 0.4s cubic-bezier(.2,.9,.3,1);
+  }
+
+  /* ---------- Main action card ---------- */
+  main{ padding:0 18px; margin-top:-4px; position:relative; z-index:2;}
+
+  .card{
+    background:var(--paper);
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:16px;
+    box-shadow:0 10px 26px rgba(10,24,48,0.14);
+    border:1px solid rgba(10,24,48,0.06);
+  }
+  .card h2{
+    margin:0 0 4px 0;
+    font-family:var(--display);
+    font-size:19px;
+    color:var(--navy-deep);
+  }
+  .card .desc{
+    font-size:13px;
+    color:var(--gray);
+    margin-bottom:16px;
+    line-height:1.5;
+  }
+
+  #workBtn{
+    width:100%;
+    appearance:none; border:none;
+    background:linear-gradient(180deg, var(--navy-light), var(--navy-deep));
+    color:var(--gold-bright);
+    font-family:var(--display);
+    font-weight:700;
+    font-size:18px;
+    padding:20px;
+    border-radius:14px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 8px 18px rgba(10,24,48,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
+    transition:transform 0.08s ease;
+  }
+  #workBtn:active{ transform:scale(0.97); }
+  #workBtn .sub{
+    display:block;
+    font-family:var(--body);
+    font-weight:400;
+    font-size:11.5px;
+    color:rgba(244,217,118,0.65);
+    margin-top:4px;
+    letter-spacing:0.03em;
+  }
+  .float-plus{
+    position:absolute;
+    font-family:var(--mono);
+    font-weight:700;
+    color:var(--gold-bright);
+    font-size:15px;
+    pointer-events:none;
+    animation:floatUp 0.9s ease-out forwards;
+  }
+  @keyframes floatUp{
+    0%{ opacity:1; transform:translateY(0); }
+    100%{ opacity:0; transform:translateY(-38px); }
+  }
+
+  /* ---------- Business cards ---------- */
+  .biz-grid{
+    display:grid;
+    gap:10px;
+  }
+  .biz-card{
+    border:1.5px solid rgba(10,24,48,0.1);
+    border-radius:12px;
+    padding:14px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
+    background:#fff;
+    transition:border-color 0.15s ease, transform 0.1s ease;
+  }
+  .biz-card:active{ transform:scale(0.98); }
+  .biz-card.disabled{ opacity:0.42; pointer-events:none; }
+  .biz-card.owned{ border-color:var(--gold); background:linear-gradient(180deg,#fffdf6,#fbf3d9); }
+  .biz-name{ font-family:var(--display); font-weight:700; font-size:15px; color:var(--navy-deep); }
+  .biz-meta{ font-size:11.5px; color:var(--gray); margin-top:3px; }
+  .biz-right{ text-align:right; }
+  .biz-cost{ font-family:var(--mono); font-weight:700; color:var(--navy); font-size:14px; }
+  .biz-income{ font-family:var(--mono); font-size:11px; color:var(--success); margin-top:2px; }
+  .biz-badge{
+    font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em;
+    background:var(--gold-bright); color:var(--navy-deep);
+    padding:2px 7px; border-radius:100px; font-weight:700;
+    display:inline-block; margin-top:4px;
+  }
+
+  .locked-card{
+    border-radius:16px;
+    padding:22px;
+    text-align:center;
+    background:repeating-linear-gradient(135deg, rgba(10,24,48,0.035) 0 10px, transparent 10px 20px);
+    border:1.5px dashed rgba(10,24,48,0.18);
+    color:var(--gray);
+  }
+  .locked-card .lock{ font-size:22px; margin-bottom:6px; }
+  .locked-card h3{ font-family:var(--display); color:var(--navy); margin:0 0 4px 0; font-size:16px; }
+  .locked-card p{ font-size:12.5px; margin:0; line-height:1.5; }
+
+  /* ---------- Ledger receipt (signature element) ---------- */
+  .ledger{
+    background:#fffdf8;
+    border-radius:4px;
+    padding:16px 18px 20px 18px;
+    box-shadow:0 10px 26px rgba(10,24,48,0.14);
+    position:relative;
+    background-image:
+      repeating-linear-gradient(180deg, transparent, transparent 27px, rgba(10,24,48,0.05) 28px);
+  }
+  .ledger::before, .ledger::after{
+    content:"";
+    position:absolute; left:0; right:0; height:10px;
+    background:
+      radial-gradient(circle at 8px 5px, var(--navy-deep) 5px, transparent 5.5px) repeat-x;
+    background-size:16px 10px;
+  }
+  .ledger::before{ top:-9px; }
+  .ledger::after{ bottom:-9px; transform:rotate(180deg); }
+  .ledger-title{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--navy);
+    text-align:center;
+    border-bottom:1px dashed rgba(10,24,48,0.25);
+    padding-bottom:10px;
+    margin-bottom:8px;
+    font-weight:700;
+  }
+  .ledger-empty{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--gray);
+    text-align:center;
+    padding:14px 0;
+  }
+  .ledger-row{
+    display:flex; justify-content:space-between; gap:10px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    padding:5px 0;
+    line-height:1.4;
+    animation:rowIn 0.25s ease-out;
+  }
+  @keyframes rowIn{
+    from{ opacity:0; transform:translateX(-4px); }
+    to{ opacity:1; transform:translateX(0); }
+  }
+  .ledger-row .label{ color:var(--ink); flex:1; }
+  .ledger-row .amt.pos{ color:var(--success); font-weight:700; }
+  .ledger-row .amt.neg{ color:var(--danger); font-weight:700; }
+
+  footer{
+    text-align:center;
+    font-size:11px;
+    color:rgba(10,24,48,0.35);
+    padding:26px 20px 6px 20px;
+    letter-spacing:0.03em;
+  }
+
+  .toast{
+    position:fixed; left:50%; bottom:24px;
+    transform:translate(-50%, 20px);
+    background:var(--navy-deep);
+    color:var(--gold-bright);
+    font-size:13px;
+    padding:12px 20px;
+    border-radius:100px;
+    box-shadow:0 10px 26px rgba(0,0,0,0.3);
+    opacity:0;
+    pointer-events:none;
+    transition:all 0.35s cubic-bezier(.2,.9,.3,1);
+    z-index:50;
+    max-width:88%;
+    text-align:center;
+    border:1px solid rgba(212,175,55,0.4);
+  }
+  .toast.show{ opacity:1; transform:translate(-50%, 0); }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <div class="brand">GENERACIÓN BILLONARIO CUÁNTICO <span>· prototipo</span></div>
+    <div class="stage-tag" id="stageTag">ETAPA 1 · VIDA COTIDIANA</div>
+    <div class="patrimonio-label">Patrimonio</div>
+    <div class="patrimonio">$<span id="money">0</span></div>
+    <div class="income-rate" id="incomeRate"></div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressLabel">Meta: Primer emprendimiento</span>
+      <span id="progressPct">$0 / $150</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <main>
+
+    <div class="card">
+      <h2>Trabajo diario</h2>
+      <div class="desc">Cada turno de trabajo genera ingresos variables. Toca para trabajar y empezar a ahorrar.</div>
+      <button id="workBtn">
+        TRABAJAR
+        <span class="sub">Ingreso variable · $8 – $16</span>
+      </button>
+    </div>
+
+    <div class="card" id="bizSection" style="display:none;">
+      <h2>Primer emprendimiento</h2>
+      <div class="desc">Elige un negocio para empezar a generar ingresos pasivos. Cada uno tiene un perfil de riesgo distinto.</div>
+      <div class="biz-grid" id="bizGrid"></div>
+    </div>
+
+    <div class="card" id="nextStageCard" style="display:none;">
+      <div class="locked-card">
+        <div class="lock">🔒</div>
+        <h3>Etapa 3 · Empresa</h3>
+        <p>Contratar empleados, comprar maquinaria y abrir oficinas. Próximamente en el prototipo completo.</p>
+      </div>
+    </div>
+
+    <div class="ledger">
+      <div class="ledger-title">Bitácora financiera</div>
+      <div id="ledgerBody">
+        <div class="ledger-empty" id="ledgerEmpty">Aún no hay movimientos.<br>Toca "Trabajar" para empezar.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>Focus Bank International · Generación Billonario Cuántico</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const state = {
+    money: 0,
+    incomePerSec: 0,
+    unlockedBiz: false,
+    ownedBiz: null,
+    nextStageShown: false,
+    workCooldown: false,
+  };
+
+  const BIZ_UNLOCK_AT = 150;
+  const NEXT_STAGE_AT = 1000;
+
+  const businesses = [
+    { id:'tienda', name:'Tienda de barrio', cost:120, income:1.4, risk:'Bajo riesgo', badge:'Estable' },
+    { id:'agro', name:'Parcela agrícola', cost:160, income:2.2, risk:'Riesgo medio', badge:'Balanceado' },
+    { id:'comercio', name:'Comercio importador', cost:220, income:3.6, risk:'Riesgo alto', badge:'Agresivo' },
+  ];
+
+  const events = [
+    { text:'Imprevisto: reparación menor', min:-14, max:-6, tone:'neg' },
+    { text:'Cliente satisfecho dejó propina', min:4, max:12, tone:'pos' },
+    { text:'Gasto de transporte', min:-9, max:-3, tone:'neg' },
+    { text:'Venta extra del día', min:6, max:18, tone:'pos' },
+  ];
+
+  const moneyEl = document.getElementById('money');
+  const incomeRateEl = document.getElementById('incomeRate');
+  const progressFill = document.getElementById('progressFill');
+  const progressPct = document.getElementById('progressPct');
+  const progressLabel = document.getElementById('progressLabel');
+  const workBtn = document.getElementById('workBtn');
+  const bizSection = document.getElementById('bizSection');
+  const bizGrid = document.getElementById('bizGrid');
+  const ledgerBody = document.getElementById('ledgerBody');
+  const ledgerEmpty = document.getElementById('ledgerEmpty');
+  const nextStageCard = document.getElementById('nextStageCard');
+  const stageTag = document.getElementById('stageTag');
+  const toast = document.getElementById('toast');
+
+  function fmt(n){
+    return Math.round(n).toLocaleString('es-EC');
+  }
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=> toast.classList.remove('show'), 2200);
+  }
+
+  function addLedgerRow(label, amount){
+    if(ledgerEmpty) ledgerEmpty.remove();
+    const row = document.createElement('div');
+    row.className = 'ledger-row';
+    const sign = amount >= 0 ? '+' : '−';
+    row.innerHTML = `<span class="label">${label}</span><span class="amt ${amount>=0?'pos':'neg'}">${sign}$${fmt(Math.abs(amount))}</span>`;
+    ledgerBody.insertBefore(row, ledgerBody.firstChild);
+    const rows = ledgerBody.querySelectorAll('.ledger-row');
+    if(rows.length > 8) rows[rows.length-1].remove();
+  }
+
+  function render(){
+    moneyEl.textContent = fmt(state.money);
+
+    if(state.incomePerSec > 0){
+      incomeRateEl.textContent = `+$${state.incomePerSec.toFixed(1)} / seg`;
+    } else {
+      incomeRateEl.textContent = '';
+    }
+
+    // progress
+    let target = state.unlockedBiz ? NEXT_STAGE_AT : BIZ_UNLOCK_AT;
+    let label = state.unlockedBiz ? 'Meta: revelar Etapa 3' : 'Meta: Primer emprendimiento';
+    let pct = Math.min(100, (state.money / target) * 100);
+    progressFill.style.width = pct + '%';
+    progressPct.textContent = `$${fmt(state.money)} / $${fmt(target)}`;
+    progressLabel.textContent = label;
+
+    if(state.money >= BIZ_UNLOCK_AT && !state.unlockedBiz){
+      state.unlockedBiz = true;
+      bizSection.style.display = 'block';
+      showToast('¡Meta alcanzada! Elige tu primer negocio.');
+    }
+
+    if(state.money >= NEXT_STAGE_AT && !state.nextStageShown){
+      state.nextStageShown = true;
+      nextStageCard.style.display = 'block';
+      stageTag.textContent = 'ETAPA 2 · COMPLETADA';
+      showToast('¡Llegaste a $1,000! Etapa 3 se acerca.');
+    }
+
+    if(state.ownedBiz && stageTag.textContent.indexOf('COMPLETADA') === -1){
+      stageTag.textContent = 'ETAPA 2 · PRIMER EMPRENDIMIENTO';
+    }
+  }
+
+  function renderBiz(){
+    bizGrid.innerHTML = '';
+    businesses.forEach(b=>{
+      const owned = state.ownedBiz === b.id;
+      const div = document.createElement('div');
+      div.className = 'biz-card' + (owned ? ' owned' : (state.ownedBiz ? ' disabled' : ''));
+      div.innerHTML = `
+        <div>
+          <div class="biz-name">${b.name}</div>
+          <div class="biz-meta">${b.risk}</div>
+          <div class="biz-badge">${owned ? 'Tu negocio' : b.badge}</div>
+        </div>
+        <div class="biz-right">
+          <div class="biz-cost">${owned ? 'Activo' : '$'+b.cost}</div>
+          <div class="biz-income">+$${b.income.toFixed(1)}/seg</div>
+        </div>
+      `;
+      if(!owned && !state.ownedBiz){
+        div.addEventListener('click', ()=> buyBiz(b));
+      }
+      bizGrid.appendChild(div);
+    });
+  }
+
+  function buyBiz(b){
+    if(state.money < b.cost) { showToast('Aún no tienes suficiente ahorrado.'); return; }
+    state.money -= b.cost;
+    state.ownedBiz = b.id;
+    state.incomePerSec += b.income;
+    addLedgerRow(`Inversión — ${b.name}`, -b.cost);
+    renderBiz();
+    render();
+  }
+
+  function floatPlus(btn, amount){
+    const rect = btn.getBoundingClientRect();
+    const el = document.createElement('div');
+    el.className = 'float-plus';
+    el.textContent = '+$' + fmt(amount);
+    el.style.left = (rect.width/2 - 20) + 'px';
+    el.style.top = '4px';
+    btn.appendChild(el);
+    setTimeout(()=> el.remove(), 900);
+  }
+
+  workBtn.addEventListener('click', ()=>{
+    if(state.workCooldown) return;
+    state.workCooldown = true;
+    workBtn.style.opacity = '0.75';
+    setTimeout(()=>{ state.workCooldown = false; workBtn.style.opacity = '1'; }, 320);
+
+    const amount = 8 + Math.random()*8;
+    state.money += amount;
+    floatPlus(workBtn, amount);
+    addLedgerRow('Trabajo diario', amount);
+    render();
+  });
+
+  // passive income tick
+  setInterval(()=>{
+    if(state.incomePerSec > 0){
+      state.money += state.incomePerSec;
+      render();
+    }
+  }, 1000);
+
+  // random flavor events once business owned
+  setInterval(()=>{
+    if(!state.ownedBiz) return;
+    if(Math.random() > 0.35) return;
+    const ev = events[Math.floor(Math.random()*events.length)];
+    const amount = ev.min + Math.random()*(ev.max - ev.min);
+    state.money = Math.max(0, state.money + amount);
+    addLedgerRow(ev.text, amount);
+    render();
+  }, 6000);
+
+  renderBiz();
+  render();
+})();
+</script>
+</body>
+</html>
