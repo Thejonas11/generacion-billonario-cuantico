@@ -1,210 +1,212 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Panel de Administración — Generación Billonario Cuántico</title>
-<style>
-  :root{
-    --navy-deep:#0a1830;
-    --navy:#122a4d;
-    --navy-light:#1f3d6b;
-    --gold:#d4af37;
-    --gold-bright:#f4d976;
-    --gold-dark:#a8811f;
-    --cream:#f6f1e4;
-    --paper:#fbf8f0;
-    --ink:#1c2430;
-    --gray:#7a8390;
-    --success:#3a8f5c;
-    --danger:#b23a2e;
-    --display: Georgia, 'Times New Roman', serif;
-    --body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0; font-family:var(--body);
-    background:linear-gradient(180deg, var(--navy-deep), var(--navy) 340px, var(--cream) 340px);
-    color:var(--ink);
-    min-height:100vh;
-  }
-  .wrap{ max-width:920px; margin:0 auto; padding:0 20px 60px 20px; }
-
-  header{ padding:36px 4px 20px 4px; color:var(--cream); }
-  .eyebrow{
-    font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
-    color:var(--gold); font-weight:700; margin-bottom:10px;
-  }
-  h1{
-    font-family:var(--display); font-size:30px; margin:0 0 6px 0; color:#fff;
-  }
-  header p{ color:rgba(246,241,228,0.65); font-size:14px; margin:0; max-width:520px; line-height:1.5; }
-
-  .lock-row{
-    display:flex; align-items:center; gap:10px;
-    margin-top:18px; padding:10px 14px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(212,175,55,0.3);
-    border-radius:10px;
-    font-size:12.5px;
-    color:var(--gold-bright);
-  }
-
-  .section-title{
-    font-family:var(--display); font-size:18px; color:var(--navy-deep);
-    margin:0 0 4px 0;
-  }
-  .section-sub{ font-size:13px; color:var(--gray); margin:0 0 16px 0; }
-
-  .games-grid{
-    display:grid; grid-template-columns:1fr 1fr; gap:16px;
-    margin-top:6px;
-  }
-  @media (max-width:640px){ .games-grid{ grid-template-columns:1fr; } }
-
-  .game-card{
-    background:var(--paper);
-    border-radius:16px;
-    padding:20px;
-    box-shadow:0 10px 26px rgba(10,24,48,0.12);
-    border:1px solid rgba(10,24,48,0.06);
-    display:flex; flex-direction:column;
-  }
-  .game-tag{
-    display:inline-block; font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
-    background:var(--gold-bright); color:var(--navy-deep); font-weight:700;
-    padding:3px 10px; border-radius:100px; margin-bottom:10px; align-self:flex-start;
-  }
-  .game-card h3{ font-family:var(--display); font-size:19px; margin:0 0 6px 0; color:var(--navy-deep); }
-  .game-card p{ font-size:13px; color:var(--gray); line-height:1.5; margin:0 0 16px 0; flex:1; }
-  .game-actions{ display:flex; gap:8px; }
-  .btn{
-    flex:1; text-align:center; text-decoration:none;
-    padding:11px 14px; border-radius:10px; font-weight:700; font-size:13.5px;
-    cursor:pointer; border:none;
-  }
-  .btn-primary{
-    background:linear-gradient(180deg, var(--navy-light), var(--navy-deep));
-    color:var(--gold-bright);
-  }
-  .btn-secondary{
-    background:#fff; color:var(--navy); border:1.5px solid rgba(10,24,48,0.15);
-  }
-
-  .panel{
-    background:var(--paper);
-    border-radius:16px;
-    padding:22px;
-    margin-top:22px;
-    box-shadow:0 10px 26px rgba(10,24,48,0.12);
-    border:1px solid rgba(10,24,48,0.06);
-  }
-  .stat-row{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px;
-  }
-  @media (max-width:640px){ .stat-row{ grid-template-columns:1fr; } }
-  .stat-box{
-    background:#fff; border-radius:12px; padding:14px;
-    border:1px solid rgba(10,24,48,0.08); text-align:center;
-  }
-  .stat-num{ font-family:var(--display); font-size:24px; color:var(--navy-deep); font-weight:700; }
-  .stat-label{ font-size:11px; color:var(--gray); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
-
-  .config-row{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:12px 0; border-bottom:1px solid rgba(10,24,48,0.07);
-    font-size:13.5px;
-  }
-  .config-row:last-child{ border-bottom:none; }
-  .config-row .label{ color:var(--ink); font-weight:600; }
-  .config-row .value{ color:var(--gray); font-family:'Courier New', monospace; }
-
-  .todo-badge{
-    display:inline-block; font-size:10px; letter-spacing:0.05em; text-transform:uppercase;
-    background:rgba(178,58,46,0.1); color:var(--danger); font-weight:700;
-    padding:2px 8px; border-radius:100px; margin-left:8px;
-  }
-
-  footer{ text-align:center; font-size:11px; color:rgba(10,24,48,0.35); padding-top:30px; }
-</style>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>R.I.E. Smart Finance — Panel Administrador</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/admin.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
-<div class="wrap">
-
-  <header>
-    <div class="eyebrow">FOCUS BANK INTERNATIONAL · ADMINISTRACIÓN</div>
-    <h1>Panel de Administración de Juegos</h1>
-    <p>Elige qué experiencia mostrar a tus clientes y revisa el estado general del proyecto.</p>
-    <div class="lock-row">
-      🔒 Acceso restringido — comparte esta página solo con tu equipo, no con clientes.
+<body class="app-page">
+  <nav class="sidebar">
+    <div class="sidebar-brand"><div class="brand-logo small">RIE</div><span>Admin</span></div>
+    <ul class="nav-links">
+      <li class="active"><a href="admin.html">&#9965; Panel Admin</a></li>
+      <li><a href="dashboard.html">&#128202; Mi Dashboard</a></li>
+      <li><a href="prestamos.html">&#127974; Pr&eacute;stamos</a></li>
+      <li><a href="cobros.html">&#128179; Cobros</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <button onclick="cerrarSesion()" class="btn-logout">Cerrar Sesi&oacute;n</button>
     </div>
-  </header>
+  </nav>
 
-  <section>
-    <div class="section-title">Selecciona el juego</div>
-    <div class="section-sub">Cada tarjeta abre la experiencia correspondiente en una pestaña nueva.</div>
+  <main class="main-content">
+    <header class="top-bar">
+      <h2>&#9965; Panel de Administrador</h2>
+      <div class="top-bar-right">
+        <span class="admin-badge">ADMINISTRADOR</span>
+        <span class="user-name" id="user-display">...</span>
+      </div>
+    </header>
 
-    <div class="games-grid">
-      <div class="game-card">
-        <span class="game-tag">Tycoon · Prototipo</span>
-        <h3>Generación Billonario Cuántico</h3>
-        <p>Vertical slice jugable de la Etapa 1 y 2: trabajo, ahorro y primer emprendimiento. El producto principal para tus clientes.</p>
-        <div class="game-actions">
-          <a class="btn btn-primary" href="index.html" target="_blank">Abrir juego</a>
-          <a class="btn btn-secondary" href="index.html" target="_blank">Vista previa</a>
+    <!-- ESTADÍSTICAS GLOBALES -->
+    <section class="cards-grid">
+      <div class="card card-navy">
+        <div class="card-icon">&#128101;</div>
+        <div class="card-info"><span>Total Usuarios</span><strong id="stat-usuarios">0</strong></div>
+      </div>
+      <div class="card card-green">
+        <div class="card-icon">&#127974;</div>
+        <div class="card-info"><span>Préstamos Activos</span><strong id="stat-prestamos">0</strong></div>
+      </div>
+      <div class="card card-red">
+        <div class="card-icon">&#9888;</div>
+        <div class="card-info"><span>En Mora</span><strong id="stat-mora">0</strong></div>
+      </div>
+      <div class="card card-blue">
+        <div class="card-icon">&#128176;</div>
+        <div class="card-info"><span>Cartera Total</span><strong id="stat-cartera">$0.00</strong></div>
+      </div>
+      <div class="card card-green-light">
+        <div class="card-icon">&#128200;</div>
+        <div class="card-info"><span>Ingresos Sistema</span><strong id="stat-ingresos">$0.00</strong></div>
+      </div>
+      <div class="card card-red-light">
+        <div class="card-icon">&#128201;</div>
+        <div class="card-info"><span>Gastos Sistema</span><strong id="stat-gastos">$0.00</strong></div>
+      </div>
+    </section>
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+      <button class="tab-btn active" onclick="showTab('tab-usuarios')">&#128101; Usuarios</button>
+      <button class="tab-btn" onclick="showTab('tab-prestamos')">&#127974; Préstamos</button>
+      <button class="tab-btn" onclick="showTab('tab-movimientos')">&#128218; Movimientos</button>
+      <button class="tab-btn" onclick="showTab('tab-cartera')">&#128196; Cartera</button>
+    </div>
+
+    <!-- TAB: USUARIOS -->
+    <section class="section-box tab-content" id="tab-usuarios">
+      <div class="section-header">
+        <h3>&#128101; Usuarios Registrados</h3>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="buscar-usuario" placeholder="Buscar usuario..." onkeyup="filtrarUsuarios()" class="search-input"/>
+          <button class="btn-sm" onclick="exportarUsuariosCSV()">&#128229; Exportar CSV</button>
         </div>
       </div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>País</th>
+              <th>Moneda</th>
+              <th>Rol</th>
+              <th>Registro</th>
+              <th>Préstamos</th>
+              <th>Por Cobrar</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-usuarios">
+            <tr><td colspan="9" class="empty-row">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-      <div class="game-card">
-        <span class="game-tag">Arcade</span>
-        <h3>Runner Dorado</h3>
-        <p>Endless runner ligero, ideal como distracción rápida o gancho de entrada para nuevos usuarios.</p>
-        <div class="game-actions">
-          <a class="btn btn-primary" href="runner.html" target="_blank">Abrir juego</a>
-          <a class="btn btn-secondary" href="runner.html" target="_blank">Vista previa</a>
+    <!-- TAB: PRÉSTAMOS -->
+    <section class="section-box tab-content" id="tab-prestamos" style="display:none">
+      <div class="section-header">
+        <h3>&#127974; Todos los Préstamos</h3>
+        <div style="display:flex;gap:8px">
+          <select id="filtro-estado-admin" onchange="cargarPrestamosAdmin()" class="select-sm">
+            <option value="todos">Todos</option>
+            <option value="activo">Activos</option>
+            <option value="mora">En Mora</option>
+            <option value="cancelado">Cancelados</option>
+          </select>
+          <button class="btn-sm" onclick="exportarPrestamosCSV()">&#128229; Exportar CSV</button>
         </div>
       </div>
-    </div>
-  </section>
-
-  <div class="panel">
-    <div class="section-title">Estado del proyecto</div>
-    <div class="section-sub">Resumen rápido, actualizado manualmente por ahora.</div>
-    <div class="stat-row">
-      <div class="stat-box">
-        <div class="stat-num">2</div>
-        <div class="stat-label">Juegos publicados</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Beneficiario</th>
+              <th>Monto</th>
+              <th>Tasa</th>
+              <th>Plazo</th>
+              <th>Sistema</th>
+              <th>Inicio</th>
+              <th>Estado</th>
+              <th>Por Cobrar</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-prestamos-admin">
+            <tr><td colspan="9" class="empty-row">Cargando...</td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="stat-box">
-        <div class="stat-num">8</div>
-        <div class="stat-label">Etapas diseñadas (GDD)</div>
+    </section>
+
+    <!-- TAB: MOVIMIENTOS -->
+    <section class="section-box tab-content" id="tab-movimientos" style="display:none">
+      <div class="section-header">
+        <h3>&#128218; Movimientos del Sistema</h3>
+        <div style="display:flex;gap:8px">
+          <select id="filtro-tipo-admin" onchange="cargarMovimientosAdmin()" class="select-sm">
+            <option value="todos">Todos</option>
+            <option value="ingreso">Ingresos</option>
+            <option value="gasto">Gastos</option>
+          </select>
+          <button class="btn-sm" onclick="exportarMovimientosCSV()">&#128229; Exportar CSV</button>
+        </div>
       </div>
-      <div class="stat-box">
-        <div class="stat-num">2 / 8</div>
-        <div class="stat-label">Etapas jugables</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Fecha</th>
+              <th>Concepto</th>
+              <th>Tipo</th>
+              <th>Valor</th>
+              <th>Moneda</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-movimientos-admin">
+            <tr><td colspan="6" class="empty-row">Cargando...</td></tr>
+          </tbody>
+        </table>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="panel">
-    <div class="section-title">Configuración del prototipo <span class="todo-badge">Solo lectura</span></div>
-    <div class="section-sub">Estos valores viven en el código de <code>index.html</code>. Para cambiarlos, pídeme el ajuste y actualizo el archivo.</div>
-    <div class="config-row"><span class="label">Ingreso por trabajo</span><span class="value">$8 – $16</span></div>
-    <div class="config-row"><span class="label">Meta para desbloquear negocio</span><span class="value">$150</span></div>
-    <div class="config-row"><span class="label">Meta para revelar Etapa 3</span><span class="value">$1,000</span></div>
-    <div class="config-row"><span class="label">Negocios disponibles</span><span class="value">3 (Tienda, Agro, Comercio)</span></div>
-  </div>
+    <!-- TAB: CARTERA -->
+    <section class="section-box tab-content" id="tab-cartera" style="display:none">
+      <div class="section-header">
+        <h3>&#128196; Reporte de Cartera Global</h3>
+        <button class="btn-sm" onclick="exportarCarteraCSV()">&#128229; Exportar CSV</button>
+      </div>
+      <div class="cards-grid mini" style="margin:0 0 16px 0">
+        <div class="card card-green"><div class="card-icon">&#10003;</div><div class="card-info"><span>Cuotas Pagadas</span><strong id="cart-pagadas">0</strong></div></div>
+        <div class="card card-red"><div class="card-icon">&#128308;</div><div class="card-info"><span>Cuotas Vencidas</span><strong id="cart-vencidas">0</strong></div></div>
+        <div class="card card-blue"><div class="card-icon">&#128197;</div><div class="card-info"><span>Cuotas Pendientes</span><strong id="cart-pendientes">0</strong></div></div>
+        <div class="card card-navy"><div class="card-icon">&#128181;</div><div class="card-info"><span>Total Mora</span><strong id="cart-mora">$0.00</strong></div></div>
+      </div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Beneficiario</th>
+              <th>Cuota #</th>
+              <th>Vencimiento</th>
+              <th>Cuota</th>
+              <th>Estado</th>
+              <th>Mora</th>
+              <th>F. Pago</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-cartera-admin">
+            <tr><td colspan="8" class="empty-row">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-  <div class="panel">
-    <div class="section-title">Estadísticas de clientes <span class="todo-badge">Pendiente</span></div>
-    <div class="section-sub">
-      Ahora mismo el progreso de cada persona se guarda solo en su propio navegador — nadie más lo ve, ni siquiera tú.
-      Para ver estadísticas reales de todos tus clientes (patrimonio, negocio elegido, tiempo jugado), el siguiente paso
-      es conectar el juego a Supabase, igual que hicimos con R.I.E. Smart Finance. Avísame cuando quieras que lo armemos.
-    </div>
-  </div>
+    <footer class="app-footer">
+      Focus Bank International &mdash; R.I.E. Smart Finance &mdash; Panel Administrador
+    </footer>
+  </main>
 
-  <footer>Focus Bank International · Generación Billonario Cuántico</footer>
-</div>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/admin.js"></script>
 </body>
 </html>
